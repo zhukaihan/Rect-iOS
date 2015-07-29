@@ -48,7 +48,7 @@ game.PlayerEntity = me.Entity.extend({
             if (!this.body.jumping && !this.body.falling) {
                 // set current vel to the maximum defined value
                 // gravity will then do the rest
-                this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
+                this.body.vel.y = -this.body.maxVel.y * me.timer.tick - bodyPartsNum + 4;
                 // set the jumping flag
                 this.body.jumping = true;
                 // play some audio
@@ -64,7 +64,6 @@ game.PlayerEntity = me.Entity.extend({
                     framewidth: 20,
                     frameheight: 7
                 });
-                console.log(this.pos.x, this.pos.y);
                 me.game.world.addChild(bodyPart);
                 bodyPartsNum--;
                 this.renderable.setCurrentAnimation(bodyPartsNum.toString());
@@ -85,7 +84,7 @@ game.PlayerEntity = me.Entity.extend({
      * colision handler
      */
     onCollision : function (response, other) {
-    console.log(response.b.body.collisionType, "asdflkjasdfkjkhsdlkfjh   ", me.collision.types);
+        //console.log(response.b.body.collisionType, "asdflkjasdfkjkhsdlkfjh   ", me.collision.types);
         switch (response.b.body.collisionType) {
             case me.collision.types.WORLD_SHAPE:
                 // Simulate a platform object
