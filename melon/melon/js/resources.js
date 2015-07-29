@@ -4,7 +4,6 @@ game.resources = [
 	 */
  	// our level tileset
 	{name: "level1_sprites", type:"image", src: "data/map/level1_sprites.png"},
-
 	// the main player spritesheet
 	{name: "player",     type:"image",	src: "data/img/sprite/player.png"},
 	// the spinning coin spritesheet
@@ -18,6 +17,8 @@ game.resources = [
 	// the parallax background
 	{name: "area01_bkg0",         type:"image",	src: "data/img/area01_bkg0.png"},
 	{name: "area01_bkg1",         type:"image",	src: "data/img/area01_bkg1.png"},
+	// the player body part
+	{name: "oneBodyPart", type:"image", src: "data/img/sprite/part.png"},
 
 	/*
 	 * Maps.

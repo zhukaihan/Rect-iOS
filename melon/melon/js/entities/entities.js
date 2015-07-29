@@ -3,7 +3,6 @@
  */
 var bodyPartsNum = 4;
 
-//game.bodyPart = new Entity()
 
 game.PlayerEntity = me.Entity.extend({
     /**
@@ -58,7 +57,15 @@ game.PlayerEntity = me.Entity.extend({
         }
         if (me.input.isKeyPressed('spit')) {
             if (bodyPartsNum > 1) {
-
+                var bodyPart = new me.Entity(this.pos.x, this.pos.y, {
+                    height: 7,
+                    width: 20,
+                    image: "oneBodyPart",
+                    framewidth: 20,
+                    frameheight: 7
+                });
+                console.log(this.pos.x, this.pos.y);
+                me.game.world.addChild(bodyPart);
                 bodyPartsNum--;
                 this.renderable.setCurrentAnimation(bodyPartsNum.toString());
             }
@@ -78,6 +85,7 @@ game.PlayerEntity = me.Entity.extend({
      * colision handler
      */
     onCollision : function (response, other) {
+    console.log(response.b.body.collisionType, "asdflkjasdfkjkhsdlkfjh   ", me.collision.types);
         switch (response.b.body.collisionType) {
             case me.collision.types.WORLD_SHAPE:
                 // Simulate a platform object
@@ -106,6 +114,7 @@ game.PlayerEntity = me.Entity.extend({
                     this.body.jumping = true;
                     // play some audio
                     me.audio.play("stomp");
+                    console.log("enemyed");
                 } else {
                     // let's flicker in case we touched an enemy
                     //this.renderable.flicker(750);
@@ -154,7 +163,7 @@ game.CoinEntity = me.CollectableEntity.extend({
 /**
  * Enemy Entity
  */
-/*game.EnemyEntity = me.Entity.extend({
+game.EnemyEntity = me.Entity.extend({
     init: function (x, y, settings) {
         // define this here instead of tiled
         settings.image = "wheelie_right";
@@ -190,14 +199,10 @@ game.CoinEntity = me.CollectableEntity.extend({
     // manage the enemy movement
     update : function (dt)
     {
-        if (this.alive)
-        {
-            if (this.walkLeft && this.pos.x <= this.startX)
-            {
+        if (this.alive) {
+            if (this.walkLeft && this.pos.x <= this.startX) {
                 this.walkLeft = false;
-            }
-            else if (!this.walkLeft && this.pos.x >= this.endX)
-            {
+            } else if (!this.walkLeft && this.pos.x >= this.endX) {
                 this.walkLeft = true;
             }
 
@@ -234,7 +239,7 @@ game.CoinEntity = me.CollectableEntity.extend({
         return true;
     }
 });
-*/
+
 game.doorEntity = me.Entity.extend({
     onCollision: function (response, other) {
         if ((response.b.body.collisionType !== me.collision.types.WORLD_SHAPE) && (bodyPartsNum == 4)) {
