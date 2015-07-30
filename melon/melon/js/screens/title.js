@@ -4,12 +4,10 @@ game.TitleScreen = me.ScreenObject.extend({
      *  action to perform on state change
      */
     onResetEvent : function() {
-
         // title screen
-        /*
         me.game.world.addChild(new me.Sprite(0, 0, {
-                   image: me.loader.getImage('title_screen')
-                }), 1);*/
+                   image: me.loader.getImage('title_screen'),
+                }), 1);
 
         // add a new renderable component with the scrolling text
         me.game.world.addChild(new (me.Renderable.extend ({
@@ -17,13 +15,14 @@ game.TitleScreen = me.ScreenObject.extend({
             init : function() {
                 this._super(me.Renderable, 'init', [0, 0, me.game.viewport.width, me.game.viewport.height]);
                 // font for the scrolling text
-                this.font = new me.BitmapFont("32x32_font", 32);
+                this.font = new me.Font("universe", 70, "white", "left"); //new me.BitmapFont("32x32_font", 32);
 
                  // a tween to animate the arrow
                 this.scrollertween = new me.Tween(this).to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
 
                 this.scroller = "A CREATION WITH MELONJS   ";
                 this.scrollerpos = 600;
+
             },
 
             // some callback for the tween objects
@@ -38,7 +37,7 @@ game.TitleScreen = me.ScreenObject.extend({
             },
 
             draw : function (renderer) {
-                this.font.draw(renderer, "PRESS ENTER TO PLAY", 20, 240);
+                this.font.draw(renderer, "PRESS ENTER TO PLAY", 20, 300);
                 this.font.draw(renderer, this.scroller, this.scrollerpos, 440);
             },
             onDestroyEvent : function() {

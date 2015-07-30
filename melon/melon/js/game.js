@@ -1,4 +1,5 @@
-
+var gameLevel = 1;
+var gamerPlayer;
 /* Game namespace */
 var game = {
 
@@ -28,12 +29,10 @@ var game = {
 
         // Set a callback to run when loading is complete.
         me.loader.onload = this.loaded.bind(this);
-				console.log("preloading");
         // Load the resources.
         me.loader.preload(game.resources);
         // Initialize melonJS and display a loading screen.
         me.state.change(me.state.LOADING);
-				console.log("preloaded");
     },
 
 
@@ -44,11 +43,15 @@ var game = {
         me.state.set(me.state.PLAY, new game.PlayScreen());
 
 		// add our player entity in the entity pool
-		me.pool.register("mainPlayer", game.PlayerEntity);
+		//me.pool.register("mainPlayer", game.PlayerEntity);
 		me.pool.register("doorEntity", game.doorEntity);
+		me.pool.register("liftEntity", game.liftEntity);
+		me.pool.register("liftButtonEntity", game.liftButtonEntity);
 		//me.pool.register("CoinEntity", game.CoinEntity);
-		me.pool.register("EnemyEntity", game.EnemyEntity);
+		//me.pool.register("EnemyEntity", game.EnemyEntity);
 
+		//gamerEntity = [game.PlayerEntity, game.PlayerEntity, game.PlayerEntity, game.PlayerEntity]
+		//gamerNum = 0;
 		// enable the keyboard
 		me.input.bindKey(me.input.KEY.LEFT, "left");
 		me.input.bindKey(me.input.KEY.RIGHT, "right");

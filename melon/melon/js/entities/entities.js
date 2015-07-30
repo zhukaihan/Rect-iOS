@@ -2,7 +2,8 @@
  * Player Entity
  */
 var bodyPartsNum = 4;
-
+var liftActive = false;
+var liftIsGoingUp = true;
 
 game.PlayerEntity = me.Entity.extend({
     /**
@@ -10,6 +11,7 @@ game.PlayerEntity = me.Entity.extend({
      */
     init:function (x, y, settings) {
         // call the constructor
+
         this._super(me.Entity, 'init', [x, y , settings]);
 
         // set the default horizontal & vertical speed (accel vector)
@@ -21,11 +23,12 @@ game.PlayerEntity = me.Entity.extend({
         // ensure the player is updated even when outside of the viewport
         this.alwaysUpdate = true;
 
+
         // define lost bodyParts animation (using the first frame)
-        this.renderable.addAnimation("4",  [0]);
-        this.renderable.addAnimation("3",  [1]);
-        this.renderable.addAnimation("2",  [2]);
-        this.renderable.addAnimation("1",  [3]);
+        this.renderable.addAnimation("4",  [3]);
+        this.renderable.addAnimation("3",  [2]);
+        this.renderable.addAnimation("2",  [1]);
+        this.renderable.addAnimation("1",  [0]);
         // set the large animation as default
         this.renderable.setCurrentAnimation("4");
     },
@@ -34,7 +37,6 @@ game.PlayerEntity = me.Entity.extend({
      * update the entity
      */
     update : function (dt) {
-
         if (me.input.isKeyPressed('left')) {
             // update the entity velocity
             this.body.vel.x -= this.body.accel.x * me.timer.tick;
@@ -57,17 +59,24 @@ game.PlayerEntity = me.Entity.extend({
         }
         if (me.input.isKeyPressed('spit')) {
             if (bodyPartsNum > 1) {
-                var bodyPart = new me.Entity(this.pos.x, this.pos.y, {
+                bodyPartsNum--;
+                this.renderable.setCurrentAnimation(bodyPartsNum.toString());
+                var thisBodyPart = new game.bodyPart(this.pos.x + 32, this.pos.y, {
+                    name: "bodyPart",
                     height: 7,
                     width: 20,
                     image: "oneBodyPart",
                     framewidth: 20,
                     frameheight: 7
                 });
-                me.game.world.addChild(bodyPart);
-                bodyPartsNum--;
-                this.renderable.setCurrentAnimation(bodyPartsNum.toString());
+                me.game.world.addChild(thisBodyPart);
+                this.body.getShape(0).setShape(0, 0, [new me.Vector2d(0, 0),
+                                                      new me.Vector2d(20, 0),
+                                                      new me.Vector2d(20, 11 + ((bodyPartsNum - 1) * 7)),
+                                                      new me.Vector2d(0, 11 + ((bodyPartsNum - 1) * 7))
+                                                  ]);
             }
+
         }
 
         // apply physics to the body (this moves the entity)
@@ -84,53 +93,82 @@ game.PlayerEntity = me.Entity.extend({
      * colision handler
      */
     onCollision : function (response, other) {
-        //console.log(response.b.body.collisionType, "asdflkjasdfkjkhsdlkfjh   ", me.collision.types);
-        switch (response.b.body.collisionType) {
-            case me.collision.types.WORLD_SHAPE:
-                // Simulate a platform object
-                if (other.type === "platform") {
-                    if (this.body.falling && !me.input.isKeyPressed('down') && (response.overlapV.y > 0) &&
-                        // Shortest overlap would move the player upward
-                        // The velocity is reasonably fast enough to have penetrated to the overlap depth
-                        (~~this.body.vel.y >= ~~response.overlapV.y)
-                    ) {
-                        // Disable collision on the x axis
-                        response.overlapV.x = 0;
-                        // Repond to the platform (it is solid)
-                        return true;
-                    }
-                    // Do not respond to the platform (pass through)
-                    return false;
+        if (response.b.name == "bodyPart") {
+            bodyPartsNum++;
+            this.renderable.setCurrentAnimation(bodyPartsNum.toString());
+            this.body.getShape(0).setShape(0, 0, [new me.Vector2d(0, 0),
+                                                  new me.Vector2d(20, 0),
+                                                  new me.Vector2d(20, 11 + ((bodyPartsNum - 1) * 7)),
+                                                  new me.Vector2d(0, 11 + ((bodyPartsNum - 1) * 7))
+                                              ]);
+            me.game.world.removeChild(response.b);
+        }
+        if (response.b.body.collisionType & me.collision.types.WORLD_SHAPE) {
+            // Simulate a platform object
+            if (other.type === "platform") {
+                if (this.body.falling && !me.input.isKeyPressed('down') && (response.overlapV.y > 0) &&
+                    // Shortest overlap would move the player upward
+                    // The velocity is reasonably fast enough to have penetrated to the overlap depth
+                    (~~this.body.vel.y >= ~~response.overlapV.y)
+                ) {
+                    // Disable collision on the x axis
+                    response.overlapV.x = 0;
+                    // Repond to the platform (it is solid)
+                    return true;
                 }
-                break;
-
-            case me.collision.types.ENEMY_OBJECT:
-                if ((response.overlapV.y>0) && !this.body.jumping) {
-                    // bounce (force jump)
-                    this.body.falling = false;
-                    this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
-                    // set the jumping flag
-                    this.body.jumping = true;
-                    // play some audio
-                    me.audio.play("stomp");
-                    console.log("enemyed");
-                } else {
-                    // let's flicker in case we touched an enemy
-                    //this.renderable.flicker(750);
-                }
+                // Do not respond to the platform (pass through)
                 return false;
-                break;
-
-            default:
-                // Do not respond to other objects (e.g. coins)
-                return false;
+            }
+        }
+        /*me.collision.types.ENEMY_OBJECT:
+            if ((response.overlapV.y>0) && !this.body.jumping) {
+                // bounce (force jump)
+                this.body.falling = false;
+                this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
+                // set the jumping flag
+                this.body.jumping = true;
+                // play some audio
+                me.audio.play("stomp");
+                console.log("enemyed");
+            } else {
+                // let's flicker in case we touched an enemy
+                //this.renderable.flicker(750);
+            }
+            return false;
         }
 
         // Make the object solid
-        return true;
+        return true;*/
     }
 });
 
+game.bodyPart = me.Entity.extend({
+    init: function(x, y, settings) {
+        settings.image = "oneBodyPart";
+        var width = settings.width;
+        var height = settings.height;
+
+        // call the parent constructor
+        this._super(me.Entity, 'init', [x, y , settings]);
+        // walking & jumping speed
+        this.body.setVelocity(5, 0);
+        this.active = true;
+    },
+    update: function(dt) {
+        if (this.active) {
+            console.log("update");
+            this.body.vel.x += this.body.maxVel.x * me.timer.tick;
+            this.body.update(dt);
+            me.collision.check(this);
+        }
+    },
+    onCollision: function(response, other) {
+        console.log("onCollisioned");
+        if (response.b.body.collisionType && me.collision.types.ALL_OBJECT) {
+            this.active = false;
+        }
+    }
+});
 
 /**
  * Coin Entity
@@ -162,7 +200,7 @@ game.CoinEntity = me.CollectableEntity.extend({
 /**
  * Enemy Entity
  */
-game.EnemyEntity = me.Entity.extend({
+/*game.EnemyEntity = me.Entity.extend({
     init: function (x, y, settings) {
         // define this here instead of tiled
         settings.image = "wheelie_right";
@@ -185,7 +223,7 @@ game.EnemyEntity = me.Entity.extend({
         // set start/end position based on the initial area size
         x = this.pos.x;
         this.startX = x;
-        this.endX   = x + width - settings.framewidth
+        this.endX   = x + width - settings.framewidth;
         this.pos.x  = x + width - settings.framewidth;
 
         // to remember which side we were walking
@@ -238,12 +276,48 @@ game.EnemyEntity = me.Entity.extend({
         return true;
     }
 });
+*/
+
+game.liftEntity = me.Entity.extend({
+    update: function(dt) {
+        this.gravity = 0;
+        this.body.setVelocity(0,4);
+        if (liftActive) {
+            if (liftIsGoingUp) {
+                this.body.vel.y -= 1000 * me.timer.tick;
+                this.body.update(dt);
+            } else {
+                this.body.vel.y += 1000 * me.timer.tick;
+                this.body.update(dt);
+            }
+            //console.log(this.body);
+            /*if (this.body.getShape(0).pos.y <= 288) {
+                liftActive = false;
+            }*/
+        }
+    }
+});
+
+game.liftButtonEntity = me.Entity.extend({
+
+    onCollision: function (response, other) {
+        if ((response.b.body.collisionType !== me.collision.types.WORLD_SHAPE) && ((response.a.name == "mainPlayer") || (response.a.name == "liftButtonEntity"))) {
+            liftActive = true;
+            //liftIsGoingUp = !liftIsGoingUp;
+        }
+    }
+
+});
 
 game.doorEntity = me.Entity.extend({
     onCollision: function (response, other) {
-        if ((response.b.body.collisionType !== me.collision.types.WORLD_SHAPE) && (bodyPartsNum == 4)) {
-            console.log("You passed");
+        if ((response.b.body.collisionType !== me.collision.types.WORLD_SHAPE) && (response.a.name == "mainPlayer") && (bodyPartsNum == 4)) {
+            gameLevel++;
+            me.game.world.removeChild(gamerPlayer);
+            me.levelDirector.loadLevel("level" + gameLevel.toString());
+            gamerPlayer = new game.PlayerEntity(150, 274, {name: "mainPlayer", width: 20, height: 32, image: "player", framewidth: 32})
+            me.game.world.addChild(gamerPlayer);
         }
         return true;
     }
-})
+});
