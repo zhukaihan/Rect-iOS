@@ -57,6 +57,8 @@ var game = {
 		me.input.bindKey(me.input.KEY.RIGHT, "right");
 		me.input.bindKey(me.input.KEY.UP,	"jump", true);
 		me.input.bindKey(me.input.KEY.SPACE, "spit", true);
+		me.input.registerPointerEvent("pointermove", me.game.world, mouseEventHandler);
+        me.input.bindPointer(me.input.mouse.LEFT, me.input.KEY.SPACE);
 
         // Start the game.
         me.state.change(me.state.MENU);

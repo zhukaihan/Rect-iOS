@@ -4,6 +4,8 @@
 var bodyPartsNum = 4;
 var liftActive = false;
 var liftIsGoingUp = true;
+var mousePos = {x: 0, y: 0};
+var bodyPartPos;
 
 game.PlayerEntity = me.Entity.extend({
     /**
@@ -93,7 +95,7 @@ game.PlayerEntity = me.Entity.extend({
      * colision handler
      */
     onCollision : function (response, other) {
-        if (response.b.name == "bodyPart") {
+        if ((response.b.name == "bodyPart") && (response.b.active == false)) {
             bodyPartsNum++;
             this.renderable.setCurrentAnimation(bodyPartsNum.toString());
             this.body.getShape(0).setShape(0, 0, [new me.Vector2d(0, 0),
@@ -147,32 +149,51 @@ game.bodyPart = me.Entity.extend({
         settings.image = "oneBodyPart";
         var width = settings.width;
         var height = settings.height;
-
+        this.bodyPartPos = {x: x, y: y};
         // call the parent constructor
+
         this._super(me.Entity, 'init', [x, y , settings]);
         // walking & jumping speed
-        this.body.setVelocity(5, 0);
+        if ((mousePos.x !== 0) && (mousePos.y !== 0)) {
+            var hypLen = Math.sqrt(Math.pow((mousePos.x - x), 2) + Math.pow((mousePos.y - y), 2));
+            this.body.setMaxVelocity(((mousePos.x - x) / hypLen * 2),((mousePos.y - y) / hypLen * 2));
+            this.velocityX = ((mousePos.x - x) / hypLen * 2);
+            this.velocityY = ((mousePos.y - y) / hypLen * 2);
+        } else {
+            this.body.setMaxVelocity(3, 0);
+        }
+        //console.log(((mousePos.x - x) / hypLen),((mousePos.y - y) / hypLen),x,y);
         this.active = true;
     },
     update: function(dt) {
         if (this.active) {
-            console.log("update");
-            this.body.vel.x += this.body.maxVel.x * me.timer.tick;
+            //console.log(this.pos);
+            if (this.velocityX > 0) {
+                this.body.vel.x += this.velocityX * me.timer.tick;
+            } else {
+                this.body.vel.x -= this.velocityX * me.timer.tick;
+            }
+            if (this.velocityY > 0) {
+                this.body.vel.y += this.velocityY * me.timer.tick;
+            } else {
+                this.body.vel.y -= this.velocityY * me.timer.tick;
+            }
             this.body.update(dt);
             me.collision.check(this);
         }
     },
     onCollision: function(response, other) {
-        console.log("onCollisioned");
-        if (response.b.body.collisionType && me.collision.types.ALL_OBJECT) {
+        if ((response.b.body.collisionType && me.collision.types.ALL_OBJECT) && ((response.a.name !== "mainPlayer") && (response.b.name !== "mainPlayer"))) {
             this.active = false;
+            
         }
     }
 });
 
 /**
  * Coin Entity
- *//*
+ */
+ /*
 game.CoinEntity = me.CollectableEntity.extend({
 
     init: function (x, y, settings) {
@@ -200,10 +221,10 @@ game.CoinEntity = me.CollectableEntity.extend({
 /**
  * Enemy Entity
  */
-/*game.EnemyEntity = me.Entity.extend({
+game.EnemyEntity = me.Entity.extend({
     init: function (x, y, settings) {
         // define this here instead of tiled
-        settings.image = "wheelie_right";
+        settings.image = "enemy";
 
         // save the area size defined in Tiled
         var width = settings.width;
@@ -211,8 +232,8 @@ game.CoinEntity = me.CollectableEntity.extend({
 
         // adjust the size setting information to match the sprite size
         // so that the entity object is created with the right size
-        settings.framewidth = settings.width = 64;
-        settings.frameheight = settings.height = 64;
+        settings.framewidth = settings.width = 31;
+        settings.frameheight = settings.height = 32;
 
         // redefine the default shape (used to define path) with a shape matching the renderable
         settings.shapes[0] = new me.Rect(0, 0, settings.framewidth, settings.frameheight);
@@ -276,7 +297,7 @@ game.CoinEntity = me.CollectableEntity.extend({
         return true;
     }
 });
-*/
+
 
 game.liftEntity = me.Entity.extend({
     update: function(dt) {
@@ -321,3 +342,9 @@ game.doorEntity = me.Entity.extend({
         return true;
     }
 });
+
+function mouseEventHandler(input) {
+    mousePos = {x: input.gameWorldX, y: input.gameWorldY};
+    //mousePos = me.input.globalToLocal(input.gameWorldX, input.gameWorldY);
+    //console.log(input);
+}
