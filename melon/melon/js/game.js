@@ -43,12 +43,11 @@ var game = {
         me.state.set(me.state.PLAY, new game.PlayScreen());
 
 		// add our player entity in the entity pool
-		//me.pool.register("mainPlayer", game.PlayerEntity);
 		me.pool.register("doorEntity", game.doorEntity);
 		me.pool.register("liftEntity", game.liftEntity);
 		me.pool.register("liftButtonEntity", game.liftButtonEntity);
 		//me.pool.register("CoinEntity", game.CoinEntity);
-		//me.pool.register("EnemyEntity", game.EnemyEntity);
+		me.pool.register("EnemyEntity", game.EnemyEntity);
 
 		//gamerEntity = [game.PlayerEntity, game.PlayerEntity, game.PlayerEntity, game.PlayerEntity]
 		//gamerNum = 0;
