@@ -225,6 +225,12 @@ game.EnemyEntity = me.Entity.extend({
     init: function (x, y, settings) {
         // define this here instead of tiled
         settings.image = "enemy";
+        this.health = 2;
+        // define lost bodyParts animation (using the first frame)
+        this.renderable.addAnimation("2",  [1]);
+        this.renderable.addAnimation("1",  [0]);
+        // set the large animation as default
+        this.renderable.setCurrentAnimation("1");
 
         // save the area size defined in Tiled
         var width = settings.width;
@@ -286,16 +292,27 @@ game.EnemyEntity = me.Entity.extend({
 
     onCollision : function (response, other) {
         if (response.b.body.collisionType !== me.collision.types.WORLD_SHAPE) {
+            if ((response.a.name === "bodyPart") && (response.b.name === "bodyPart")){
+                health = health--;
+            }
+            if (health <= 0){
+                me.game.world.removeChild(this);
+            }else{
+                this.renderable.setCurrentAnimation(health.toString());
+                this.body.vel.x += -1000;
+            }
+
+        }
             // res.y >0 means touched by something on the bottom
             // which mean at top position for this one
-            if (this.alive && (response.overlapV.y > 0) && response.a.body.falling) {
-                this.renderable.flicker(750);
-            }
-            return false;
-        }
-        // Make all other objects solid
-        return true;
+        /*if (this.alive && (response.overlapV.y > 0) && response.a.body.falling) {
+            this.renderable.flicker(750);
+        }*/
+        //return false;
     }
+        // Make all other objects solid
+        //return true;
+    //}
 });
 
 

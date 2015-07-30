@@ -5,6 +5,7 @@ game.resources = [
  	// our level tileset
 	{name: "level1_sprites", type:"image", src: "data/map/level1_sprites.png"},
 	{name: "level2_sprites", type:"image", src: "data/map/level2_sprites.png"},
+	{name: "level3_sprites", type:"image", src: "data/map/level3_sprites.png"},
 
 	// the main player spritesheet
 	{name: "player",     type:"image",	src: "data/img/sprite/player.png"},
