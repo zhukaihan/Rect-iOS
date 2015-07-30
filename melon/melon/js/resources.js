@@ -12,7 +12,7 @@ game.resources = [
 	// the spinning coin spritesheet
 	{name: "spinning_coin_gold",  type:"image",	src: "data/img/sprite/spinning_coin_gold.png"},
 	// our enemty entity
-	{name: "enemy",       type:"image",	src: "data/img/sprite/enemy2.png"},
+	{name: "enemy",       type:"image",	src: "data/img/sprite/enemy.png"},
 	// game font
 	{name: "32x32_font",          type:"image",	src: "data/img/font/32x32_font.png"},
 	// title screen
@@ -23,12 +23,14 @@ game.resources = [
 	// the player body part
 	{name: "oneBodyPart", type:"image", src: "data/img/sprite/part.png"},
 	//{name: "mapBlock", type:"image", src: "data/img/map/block.png"},
+	{name: "lift", type:"image", src: "data/map/lift.png"},
 
 	/*
 	 * Maps.
  	 */
 	{name: "level1", type: "tmx",	src: "data/map/level1.tmx"},
 	{name: "level2", type: "tmx",	src: "data/map/level2.tmx"},
+	{name: "level3", type: "tmx",	src: "data/map/level3.tmx"},
 
 	/*
 	 * Background music.
