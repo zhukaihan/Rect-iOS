@@ -6,6 +6,7 @@ game.resources = [
 	{name: "level1_sprites", type:"image", src: "data/map/level1_sprites.png"},
 	{name: "level2_sprites", type:"image", src: "data/map/level2_sprites.png"},
 	{name: "level3_sprites", type:"image", src: "data/map/level3_sprites.png"},
+	{name: "level4_sprites", type:"image", src: "data/map/level4_sprites.png"},
 
 	// the main player spritesheet
 	{name: "player",     type:"image",	src: "data/img/sprite/player.png"},
@@ -24,6 +25,7 @@ game.resources = [
 	{name: "oneBodyPart", type:"image", src: "data/img/sprite/part.png"},
 	//{name: "mapBlock", type:"image", src: "data/img/map/block.png"},
 	{name: "lift", type:"image", src: "data/map/lift.png"},
+	{name: "gate", type:"image", src: "data/map/gate.png"},
 
 	/*
 	 * Maps.
@@ -31,6 +33,7 @@ game.resources = [
 	{name: "level1", type: "tmx",	src: "data/map/level1.tmx"},
 	{name: "level2", type: "tmx",	src: "data/map/level2.tmx"},
 	{name: "level3", type: "tmx",	src: "data/map/level3.tmx"},
+	{name: "level4", type: "tmx",	src: "data/map/level4.tmx"},
 
 	/*
 	 * Background music.

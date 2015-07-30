@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="20" tilewidth="32" tileheight="32" backgroundcolor="#518086" nextobjectid="43">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="20" tilewidth="32" tileheight="32" backgroundcolor="#518086" nextobjectid="44">
  <tileset firstgid="1" name="sprites2" tilewidth="32" tileheight="32">
   <image source="level2_sprites.png" width="2048" height="1024"/>
  </tileset>
@@ -11,7 +11,7 @@
  <objectgroup name="Collision">
   <object id="2" x="32" y="320" width="159" height="319"/>
   <object id="3" x="191" y="416" width="288" height="221"/>
-  <object id="4" x="481" y="608" width="640" height="32"/>
+  <object id="4" x="480" y="607.333" width="640" height="32.6667"/>
   <object id="5" x="1230" y="654" height="16"/>
   <object id="7" x="32" y="0" width="31" height="324"/>
   <object id="9" x="64" y="0" width="1057" height="128"/>
@@ -38,6 +38,7 @@
    </properties>
   </object>
   <object id="41" x="521.5" y="426.5" width="21.5" height="165.5"/>
+  <object id="43" x="519.333" y="412" width="24.6667" height="12.6667"/>
  </objectgroup>
  <objectgroup name="door">
   <object id="29" name="doorEntity" x="736" y="257" width="18" height="31"/>
