@@ -1,6 +1,16 @@
-var gameLevel = 2;
+var gameLevel = 5;
 var gamerPlayer;
-var gameGateFinalPosition = [0, 288, 5, 0, 0, 0];
+var gameGateFinalPosition = [
+	0,
+	288,
+	5,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0
+];
 /* Game namespace */
 var game = {
 
@@ -47,8 +57,8 @@ var game = {
 		me.pool.register("doorEntity", game.doorEntity);
 		me.pool.register("liftEntity", game.liftEntity);
 		me.pool.register("liftButtonEntity", game.liftButtonEntity);
-		//me.pool.register("CoinEntity", game.CoinEntity);
 		me.pool.register("enemyEntity", game.EnemyEntity);
+		me.pool.register("regenEntity", game.regenEntity);
 
 		//gamerEntity = [game.PlayerEntity, game.PlayerEntity, game.PlayerEntity, game.PlayerEntity]
 		//gamerNum = 0;

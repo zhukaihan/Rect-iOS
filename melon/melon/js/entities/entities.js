@@ -5,12 +5,7 @@ var bodyPartsNum = 4;
 var liftActive = false;
 var liftIsGoingUp = true;
 var mousePos = {x: 0, y: 0};
-var player = {
-    pos: {
-        x: 150,
-        y: 274
-    }
-};
+var liftObjects = [];
 
 game.PlayerEntity = me.Entity.extend({
     /**
@@ -129,25 +124,12 @@ game.PlayerEntity = me.Entity.extend({
                 return false;
             }
         }
-        /*me.collision.types.ENEMY_OBJECT:
-            if ((response.overlapV.y>0) && !this.body.jumping) {
-                // bounce (force jump)
-                this.body.falling = false;
-                this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
-                // set the jumping flag
-                this.body.jumping = true;
-                // play some audio
-                me.audio.play("stomp");
-                console.log("enemyed");
-            } else {
-                // let's flicker in case we touched an enemy
-                //this.renderable.flicker(750);
-            }
-            return false;
+        if ((response.b.name == "enemyEntity") || (response.b.name == "enemyEntity")) {
+            me.game.world.removeChild(gamerPlayer);
+            me.levelDirector.loadLevel("level" + gameLevel.toString());
+            gamerPlayer = new game.PlayerEntity(150, 274, {name: "mainPlayer", width: 20, height: 32, image: "player", framewidth: 32})
+            me.game.world.addChild(gamerPlayer);
         }
-
-        // Make the object solid
-        return true;*/
     }
 });
 
@@ -182,7 +164,7 @@ game.bodyPart = me.Entity.extend({
     },
     update: function(dt) {
         if (this.active) {
-            console.log(this.velocityX, this.velocityY);
+            //console.log(this.velocityX, this.velocityY);
 /*
             if (this.velocityX >= 0) {
                 this.body.vel.x += this.velocityX * me.timer.tick;
@@ -352,6 +334,13 @@ game.EnemyEntity = me.Entity.extend({
 
 
 game.liftEntity = me.Entity.extend({
+    init: function(x, y, settings) {
+        this._super(me.Entity, 'init', [x, y, settings]);
+        if (settings.matchNum !== null) {
+            liftObjects.push(this);
+            liftObjects.sort();
+        }
+    },
     update: function(dt) {
         this.gravity = 0;
         this.body.setVelocity(0,4);
@@ -376,6 +365,31 @@ game.liftButtonEntity = me.Entity.extend({
         }
     }
 
+});
+
+game.regenEntity = me.Entity.extend({
+    onCollision: function (response, other) {
+        if (response.a.name == "mainPlayer") {
+            bodyPartsNum = 4;
+            response.a.renderable.setCurrentAnimation(bodyPartsNum.toString());
+            response.a.body.getShape(0).setShape(0, 0, [new me.Vector2d(0, 0),
+                                                  new me.Vector2d(20, 0),
+                                                  new me.Vector2d(20, 11 + ((bodyPartsNum - 1) * 7)),
+                                                  new me.Vector2d(0, 11 + ((bodyPartsNum - 1) * 7))
+                                              ]);
+            me.game.world.removeChild(this);
+        }
+        if (response.b.name =="mainPlayer") {
+            bodyPartsNum = 4;
+            response.b.renderable.setCurrentAnimation(bodyPartsNum.toString());
+            response.b.body.getShape(0).setShape(0, 0, [new me.Vector2d(0, 0),
+                                                  new me.Vector2d(20, 0),
+                                                  new me.Vector2d(20, 11 + ((bodyPartsNum - 1) * 7)),
+                                                  new me.Vector2d(0, 11 + ((bodyPartsNum - 1) * 7))
+                                              ]);
+            me.game.world.removeChild(this);
+        }
+    }
 });
 
 game.doorEntity = me.Entity.extend({

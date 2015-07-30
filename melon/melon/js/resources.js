@@ -7,6 +7,7 @@ game.resources = [
 	{name: "level2_sprites", type:"image", src: "data/map/level2_sprites.png"},
 	{name: "level3_sprites", type:"image", src: "data/map/level3_sprites.png"},
 	{name: "level4_sprites", type:"image", src: "data/map/level4_sprites.png"},
+	{name: "level5_sprites", type:"image", src: "data/map/level5_sprites.png"},
 
 	// the main player spritesheet
 	{name: "player",     type:"image",	src: "data/img/sprite/player.png"},
@@ -34,6 +35,7 @@ game.resources = [
 	{name: "level2", type: "tmx",	src: "data/map/level2.tmx"},
 	{name: "level3", type: "tmx",	src: "data/map/level3.tmx"},
 	{name: "level4", type: "tmx",	src: "data/map/level4.tmx"},
+	{name: "level5", type: "tmx",	src: "data/map/level5.tmx"},
 
 	/*
 	 * Background music.
