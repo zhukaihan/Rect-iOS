@@ -7,8 +7,8 @@ var liftActive = false;
 var liftIsGoingUp = true;
 var mousePos = {x: 0, y: 0};
 var liftObjects = [];
-var myButton = me.GUI_Object.extend(
-{
+var enemyObjects = [];
+var myButton = me.GUI_Object.extend({
    init:function (x, y) {
       var settings = {}
       settings.image = "restart";
@@ -26,17 +26,15 @@ var myButton = me.GUI_Object.extend(
 
    // output something in the console
    // when the object is clicked
-   onClick:function (event){
-    if (event.type == "mousedown") {
-    me.game.world.removeChild(gamerPlayer);
-    me.levelDirector.loadLevel("level" + gameLevel.toString());
-    gamerPlayer = new game.PlayerEntity(150, 274, {name: "mainPlayer", width: 20, height: 32, image: "player", framewidth: 32})
-    me.game.world.addChild(gamerPlayer);
+   onClick:function (event) {
+        if (event.type == "mousedown") {
+            clearLevel();
+            me.levelDirector.loadLevel("level" + gameLevel.toString());
+            gamerPlayer = new game.PlayerEntity(150, 274, {name: "mainPlayer", width: 20, height: 32, image: "player", framewidth: 32})
+            me.game.world.addChild(gamerPlayer);
+        }
     }
-
-   }
 });
-var enemyObjects = [];
 
 game.PlayerEntity = me.Entity.extend({
     /**
@@ -486,9 +484,8 @@ game.regenEntity = me.Entity.extend({
 game.doorEntity = me.Entity.extend({
     onCollision: function (response, other) {
         if ((response.b.body.collisionType !== me.collision.types.WORLD_SHAPE) && (response.a.name == "mainPlayer") && (bodyPartsNum == 4)) {
-            liftObjects = [];
+            clearLevel()
             gameLevel++;
-            me.game.world.removeChild(gamerPlayer);
             me.levelDirector.loadLevel("level" + gameLevel.toString());
             gamerPlayer = new game.PlayerEntity(150, 274, {name: "mainPlayer", width: 20, height: 32, image: "player", framewidth: 32})
             me.game.world.addChild(gamerPlayer);
@@ -501,4 +498,10 @@ function mouseEventHandler(input) {
     mousePos = {x: input.gameWorldX, y: input.gameWorldY};
     //mousePos = me.input.globalToLocal(input.gameWorldX, input.gameWorldY);
     //console.log(input.gameWorldY);
+}
+
+function clearLevel() {
+    liftObjects = [];
+    enemyObjects = [];
+    me.game.world.removeChild(gamerPlayer);
 }
