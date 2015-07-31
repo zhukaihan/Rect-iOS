@@ -9,7 +9,11 @@
   </data>
  </layer>
  <objectgroup name="button">
-  <object id="1" name="liftButtonEntity" x="885" y="202" width="12" height="23"/>
+  <object id="1" name="liftButtonEntity" x="885" y="202" width="12" height="23">
+   <properties>
+    <property name="matchNum" value="0"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="collision">
   <object id="2" x="0" y="257" width="126" height="382"/>
@@ -23,7 +27,10 @@
   <object id="11" x="1" y="29" width="32" height="237"/>
   <object id="18" name="liftEntity" x="898" y="191" width="32" height="192">
    <properties>
+    <property name="direction" value="up"/>
     <property name="image" value="gate"/>
+    <property name="matchNum" value="0"/>
+    <property name="upHeight" value="2"/>
    </properties>
   </object>
  </objectgroup>
@@ -32,7 +39,7 @@
   <object id="14" x="1042" y="382" height="2"/>
  </objectgroup>
  <objectgroup name="enemy">
-  <object id="17" name="enemyEntity" x="485" y="351" width="320" height="32">
+  <object id="17" name="enemyEntity" x="416" y="350" width="448" height="32">
    <properties>
     <property name="framewidth" value="32"/>
     <property name="image" value="enemy"/>

@@ -1,16 +1,6 @@
 var gameLevel = 1;
 var gamerPlayer;
-var gameGateFinalPosition = [
-	0,
-	288,
-	5,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0
-];
+
 /* Game namespace */
 var game = {
 
@@ -69,6 +59,7 @@ var game = {
 		me.input.bindKey(me.input.KEY.SPACE, "spit", true);
 		me.input.registerPointerEvent("pointermove", me.game.world, mouseEventHandler);
         me.input.bindPointer(me.input.mouse.LEFT, me.input.KEY.SPACE);
+		//me.input.bindKey(me.input.KEY.R, "restartIt");
 
         // Start the game.
         me.state.change(me.state.MENU);

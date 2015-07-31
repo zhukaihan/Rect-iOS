@@ -6,6 +6,7 @@ var liftActive = false;
 var liftIsGoingUp = true;
 var mousePos = {x: 0, y: 0};
 var liftObjects = [];
+var enemyObjects = [];
 
 game.PlayerEntity = me.Entity.extend({
     /**
@@ -97,7 +98,7 @@ game.PlayerEntity = me.Entity.extend({
      * colision handler
      */
     onCollision : function (response, other) {
-        if ((response.b.name == "bodyPart") && (response.b.active == false)) {
+        if ((response.b.name == "bodyPart") && (response.b.active == false) && (bodyPartsNum < 4)) {
             bodyPartsNum++;
             this.renderable.setCurrentAnimation(bodyPartsNum.toString());
             this.body.getShape(0).setShape(0, 0, [new me.Vector2d(0, 0),
@@ -125,11 +126,13 @@ game.PlayerEntity = me.Entity.extend({
             }
         }
         if ((response.b.name == "enemyEntity") || (response.b.name == "enemyEntity")) {
+            liftObjects = [];
             me.game.world.removeChild(gamerPlayer);
-            me.levelDirector.loadLevel("level" + gameLevel.toString());
+            me.levelDirector.reloadLevel();
             gamerPlayer = new game.PlayerEntity(150, 274, {name: "mainPlayer", width: 20, height: 32, image: "player", framewidth: 32})
             me.game.world.addChild(gamerPlayer);
         }
+
     }
 });
 
@@ -142,7 +145,9 @@ game.bodyPart = me.Entity.extend({
         // call the parent constructor
 
         this._super(me.Entity, 'init', [x, y , settings]);
+        this.alwaysUpdate = true;
         // walking & jumping speed
+
         this.body.setMaxVelocity(10, 10);
         if ((mousePos.x !== 0) && (mousePos.y !== 0)) {
             var hypLen = Math.sqrt(Math.pow((mousePos.x - x), 2) + Math.pow((mousePos.y - y), 2));
@@ -263,6 +268,7 @@ game.EnemyEntity = me.Entity.extend({
         // set the large animation as default
         this.renderable.setCurrentAnimation("2");
         // set start/end position based on the initial area size
+
         x = this.pos.x;
         this.startX = x;
         this.endX   = x + width - settings.framewidth;
@@ -271,6 +277,14 @@ game.EnemyEntity = me.Entity.extend({
         // to remember which side we were walking
         this.walkLeft = false;
 
+        this.alwaysUpdate = true;
+
+        this.defeated = false;
+
+        var anEnemy = this;
+        enemyObjects.push(anEnemy);
+
+        this.gravity = 0.98;
         // walking & jumping speed
         this.body.setVelocity(4, 6);
     },
@@ -313,9 +327,9 @@ game.EnemyEntity = me.Entity.extend({
                 if (this.health <= 0){
                     this.alive = false;
                     me.game.world.removeChild(this);
+                    this.defeated = true;
                 }else{
                     this.renderable.setCurrentAnimation(this.health.toString());
-                    this.body.vel.x -= 1000;
                 }
             }
 
@@ -336,31 +350,78 @@ game.EnemyEntity = me.Entity.extend({
 game.liftEntity = me.Entity.extend({
     init: function(x, y, settings) {
         this._super(me.Entity, 'init', [x, y, settings]);
-        if (settings.matchNum !== null) {
-            liftObjects.push(this);
-            liftObjects.sort();
+        if (settings.matchNum !== -1) {
+            this.upHeight = settings.upHeight;
+            this.matchNum = settings.matchNum;
+            this.direction = settings.direction;
+            this.motionTrigger = settings.motionTrigger;
+            var anotherone = this;
+            liftObjects.push(anotherone);
+            //console.log(anotherone);
         }
-    },
-    update: function(dt) {
+        this.liftActive == false;
         this.gravity = 0;
         this.body.setVelocity(0,4);
-        if (liftActive) {
-            this.body.vel.y -= 1000 * me.timer.tick;
+        this.alwaysUpdate = true;
+    },
+    update: function(dt) {
+        if (this.liftActive) {
+           	if (this.direction == "disappear") {
+        		me.game.world.removeChild(this);
+   	    		this.liftActive = false;
+       		} else if (this.direction == "up") {
+         	    this.body.vel.y -= 1000 * me.timer.tick;
+               	if (this.pos.y <= this.upHeight) {
+                   	this.liftActive = false;
+               	}
+            } else {
+   	            this.body.vel.y += 1000 * me.timer.tick;
+    	        if (this.pos.y >= this.upHeight) {
+        	        this.liftActive = false;
+            	}
+	        }
             this.body.update(dt);
-            //console.log(this.body);
-            if (this.pos.y <= gameGateFinalPosition[gameLevel - 1]) {
-                liftActive = false;
-            }
+        }
+        if (this.motionTrigger == "enemy") {
+            var allEnemyDefeated = true;
+           	for (var i = 0; i < enemyObjects.length; i++) {
+        	   	//console.log(enemyObjects[i].defeated);
+           		if (!enemyObjects[i].defeated) {
+           			allEnemyDefeated = false;
+           			break;
+           		}
+           	}
+           	if (allEnemyDefeated) {
+           		this.motionTrigger = "";
+           		this.liftActive = true;
+           	}
         }
     }
 });
 
 game.liftButtonEntity = me.Entity.extend({
+    init: function(x,y,settings) {
+        this._super(me.Entity, 'init', [x, y, settings]);
+        if (settings.matchNum !== null) {
+            this.matchNum = settings.matchNum;
+        }
+    },
 
     onCollision: function (response, other) {
-        if ((response.b.body.collisionType !== me.collision.types.WORLD_SHAPE) && ((response.a.name == "mainPlayer") || (response.a.name == "liftButtonEntity") || (response.b.name == "liftButtonEntity"))) {
-            liftActive = true;
-            console.log("liftopen");
+        if ((response.b.body.collisionType !== me.collision.types.WORLD_SHAPE)
+        && ((response.a.name == "mainPlayer") || (response.a.name == "liftButtonEntity") || (response.b.name == "liftButtonEntity"))) {
+            for (var i = 0; i < liftObjects.length; i++) {
+                if (liftObjects[i].matchNum == this.matchNum) {
+                    liftObjects[i].liftActive = true;
+                    //me.game.world.removeChild(this);
+                }
+            }/*
+            liftObjects.forEach(function(x) {
+                if (x.matchNum == this.matchNum) {
+                    x.liftActive = true;
+                }
+                console.log("liftoncolli");
+            });*/
             //liftIsGoingUp = !liftIsGoingUp;
         }
     }
@@ -395,6 +456,7 @@ game.regenEntity = me.Entity.extend({
 game.doorEntity = me.Entity.extend({
     onCollision: function (response, other) {
         if ((response.b.body.collisionType !== me.collision.types.WORLD_SHAPE) && (response.a.name == "mainPlayer") && (bodyPartsNum == 4)) {
+            liftObjects = [];
             gameLevel++;
             me.game.world.removeChild(gamerPlayer);
             me.levelDirector.loadLevel("level" + gameLevel.toString());
@@ -408,5 +470,5 @@ game.doorEntity = me.Entity.extend({
 function mouseEventHandler(input) {
     mousePos = {x: input.gameWorldX, y: input.gameWorldY};
     //mousePos = me.input.globalToLocal(input.gameWorldX, input.gameWorldY);
-    //console.log(input);
+    //console.log(input.gameWorldY);
 }
