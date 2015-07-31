@@ -9,8 +9,7 @@ var mousePos = {x: 0, y: 0};
 var liftObjects = [];
 var myButton = me.GUI_Object.extend(
 {
-   init:function (x, y)
-   {
+   init:function (x, y) {
       var settings = {}
       settings.image = "restart";
       settings.framewidth = 32;
