@@ -34,7 +34,7 @@ var myButton = me.GUI_Object.extend(
     gamerPlayer = new game.PlayerEntity(150, 274, {name: "mainPlayer", width: 20, height: 32, image: "player", framewidth: 32})
     me.game.world.addChild(gamerPlayer);
     }
-    
+
    }
 });
 var enemyObjects = [];
@@ -45,7 +45,7 @@ game.PlayerEntity = me.Entity.extend({
      */
     init:function (x, y, settings) {
         // call the constructor
-
+        bodyPartsNum = 4;
         this._super(me.Entity, 'init', [x, y , settings]);
 
         // set the default horizontal & vertical speed (accel vector)
