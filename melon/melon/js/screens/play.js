@@ -1,3 +1,5 @@
+var restartButton;
+
 game.PlayScreen = me.ScreenObject.extend({
 	/**
 	 *  action to perform on state change
@@ -8,14 +10,13 @@ game.PlayScreen = me.ScreenObject.extend({
 		me.audio.playTrack("dst-inertexponent");
 
     	// load a level
-		me.levelDirector.loadLevel("level5");
+		me.levelDirector.loadLevel("level1");
 
 		// reset the score
 		game.data.score = 0;
 
-		// add our HUD to the game world
-		this.HUD = new game.HUD.Container();
-		me.game.world.addChild(this.HUD);
+		restartButton = new myButton(600,440);
+		me.game.world.addChild(restartButton);
 
 		gamerPlayer = new game.PlayerEntity(150, 274, {name: "mainPlayer", width: 20, height: 32, image: "player", framewidth: 32});
 		me.game.world.addChild(gamerPlayer);

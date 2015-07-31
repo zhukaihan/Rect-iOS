@@ -6,6 +6,7 @@
 
 game.HUD = game.HUD || {};
 
+// add the object at pos (10,10)
  
 game.HUD.Container = me.Container.extend({
 

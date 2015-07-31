@@ -27,7 +27,7 @@ game.resources = [
 	//{name: "mapBlock", type:"image", src: "data/img/map/block.png"},
 	{name: "lift", type:"image", src: "data/map/lift.png"},
 	{name: "gate", type:"image", src: "data/map/gate.png"},
-
+	{name: "restart", type: "image", src: "data/img/sprite/restart.png"},
 	/*
 	 * Maps.
  	 */

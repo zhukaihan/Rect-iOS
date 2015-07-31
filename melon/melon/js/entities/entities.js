@@ -1,3 +1,4 @@
+
 /**
  * Player Entity
  */
@@ -6,6 +7,36 @@ var liftActive = false;
 var liftIsGoingUp = true;
 var mousePos = {x: 0, y: 0};
 var liftObjects = [];
+var myButton = me.GUI_Object.extend(
+{
+   init:function (x, y)
+   {
+      var settings = {}
+      settings.image = "restart";
+      settings.framewidth = 32;
+      settings.frameheight = 32;
+      // super constructor
+      this._super(me.GUI_Object, "init", [x, y, settings]);
+      // define the object z order
+      this.z = Infinity;// persistent across level change
+        this.isPersistent = true;
+
+        // make sure we use screen coordinates
+        this.floating = true;
+   },
+
+   // output something in the console
+   // when the object is clicked
+   onClick:function (event){
+    if (event.type == "mousedown") {
+    me.game.world.removeChild(gamerPlayer);
+    me.levelDirector.loadLevel("level" + gameLevel.toString());
+    gamerPlayer = new game.PlayerEntity(150, 274, {name: "mainPlayer", width: 20, height: 32, image: "player", framewidth: 32})
+    me.game.world.addChild(gamerPlayer);
+    }
+    
+   }
+});
 
 game.PlayerEntity = me.Entity.extend({
     /**
