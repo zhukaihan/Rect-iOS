@@ -1,4 +1,4 @@
-var gameLevel = 5;
+var gameLevel = 1;
 var gamerPlayer;
 var gameGateFinalPosition = [
 	0,

@@ -9,16 +9,44 @@
   </data>
  </layer>
  <objectgroup name="gate">
-  <object id="1" x="478" y="223" width="33" height="192"/>
+  <object id="1" name="liftEntity" x="478" y="223" width="33" height="192">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="image" value="gate"/>
+    <property name="matchNum" value="0"/>
+    <property name="upHeight" value="384"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="gate2">
-  <object id="7" x="737" y="225" width="31" height="189"/>
+  <object id="7" name="liftEntity" x="737" y="225" width="31" height="189">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="image" value="gate"/>
+    <property name="matchNum" value="2"/>
+    <property name="upHeight" value="384"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="gate3">
-  <object id="9" x="607" y="224" width="33" height="192"/>
+  <object id="9" name="liftEntity" x="607" y="224" width="33" height="192">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="image" value="gate"/>
+    <property name="matchNum" value="1"/>
+    <property name="upHeight" value="384"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="gate4">
-  <object id="16" x="960" y="223" width="32" height="192"/>
+  <object id="16" name="liftEntity" x="960" y="223" width="32" height="192">
+   <properties>
+    <property name="direction" value="up"/>
+    <property name="image" value="gate"/>
+    <property name="matchNum" value="3"/>
+    <property name="upHeight" value="33"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="trap">
   <object id="11" x="801" y="161" width="125" height="29"/>
@@ -30,13 +58,25 @@
   <object id="14" x="776" y="350" width="148" height="32"/>
  </objectgroup>
  <objectgroup name="button">
-  <object id="21" x="308" y="363" width="12" height="20"/>
+  <object id="21" name="liftButtonEntity" x="308" y="363" width="12" height="20">
+   <properties>
+    <property name="2" value=""/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="button2">
-  <object id="20" x="31" y="75" width="11" height="21"/>
+  <object id="20" name="liftButtonEntity" x="31" y="75" width="11" height="21">
+   <properties>
+    <property name="matchNum" value="0"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="button3">
-  <object id="19" x="501" y="172" width="11" height="19"/>
+  <object id="19" name="liftButtonEntity" x="501" y="172" width="11" height="19">
+   <properties>
+    <property name="matchNum" value="1"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="button4">
   <object id="18" x="916" y="268" width="11" height="18"/>
