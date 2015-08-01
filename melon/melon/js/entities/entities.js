@@ -154,8 +154,7 @@ game.PlayerEntity = me.Entity.extend({
             }
         }
         if ((response.b.name == "enemyEntity") || (response.b.name == "enemyEntity")) {
-            liftObjects = [];
-            me.game.world.removeChild(gamerPlayer);
+            clearLevel();
             me.levelDirector.reloadLevel();
             gamerPlayer = new game.PlayerEntity(150, 274, {name: "mainPlayer", width: 20, height: 32, image: "player", framewidth: 32})
             me.game.world.addChild(gamerPlayer);
